@@ -39,6 +39,7 @@ public:
 	}
 };
 
+int func1(Point& p);
 
 int main() {
 	// struct 타입의 초기화
@@ -56,9 +57,27 @@ int main() {
 	p1.setX(15);
 	p1.setY(15);
 	Point p3 = p1 + 10;		// p3(25, 25)
-	printf("Point 클래스의 연산자 오버로딩 테스트 (+) : p1(%.2f, %.2f) + %d ---> (%.2f, %.2f)\n",
+	printf("Point 클래스의 연산자 오버로딩 테스트1 (+) : p1(%.2f, %.2f) + %d ---> (%.2f, %.2f)\n",
 		p1.getX(), p1.getY(), 10, p3.getX(), p3.getX());
 	Point p4 = p1 + p3;
-	printf("Point 클래스의 연산자 오버로딩 테스트 (+) : p1(%.2f, %.2f) + p3(%.2f, %.2f) ---> (%.2f, %.2f)\n",
+	printf("Point 클래스의 연산자 오버로딩 테스트2 (+) : p1(%.2f, %.2f) + p3(%.2f, %.2f) ---> (%.2f, %.2f)\n",
 		p1.getX(), p1.getY(), p3.getX(), p3.getX(), p4.getX(), p4.getY());
+	
+	Point* p5 = &p4;
+	
+	printf("Point 클래스의 연산자 오버로딩 테스트2 (+) : p1(%.2f, %.2f) + p3(%.2f, %.2f) ---> (%.2f, %.2f)\n",
+		p1.getX(), p1.getY(), p3.getX(), p3.getX(), p5->getX(), p5->getY());
+
+	func1(*p5);
+
+	// Point p5 = p1 + p3 + p4;
+	
+}
+
+int func1(Point& p5) {
+
+	// pointer도 레퍼런스로 받으면 '.'을 사용할 수 있다.
+	printf("p5(x, y) = (%.2f, %.2f)\n",	 p5.getX(), p5.getY());
+
+	return 0;
 }
