@@ -14,46 +14,26 @@ namespace WindowsForms_Graphic
     {
         public int circleHeight;
         public int circleWidth;
-        public Color lineColor;
-        public string lineColorName;
-        public int lineSize;
-
+        
         public FormCircleProperties(int circleHeight, int circleWidth, Color lineColor, int lineSize)
         {
             InitializeComponent();
             this.circleHeight = circleHeight;
             tbCircleHeight.Text = circleHeight.ToString();
             this.circleWidth = circleWidth;
-            tbCircleWidth.Text = circleWidth.ToString();
-            this.lineColor = lineColor;
-            tbCircleLineColor.Text = lineColor.Name;
-            this.lineSize = lineSize;
-            tbCircleLineSize.Text = lineSize.ToString();
+            tbCircleWidth.Text = circleWidth.ToString();            
         }
             
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (tbCircleHeight.Text == null || tbCircleLineColor.Text == null
-                || tbCircleLineSize.Text == null || tbCircleLineColor.Text == null)
+            if (tbCircleHeight.Text == "" || tbCircleWidth.Text == "")
             {
                 MessageBox.Show("비어있는 항목을 채워주세요!");
+                return;
             }
             circleHeight = int.Parse(tbCircleHeight.Text);
-            circleWidth = int.Parse(tbCircleWidth.Text);
-            lineSize = int.Parse(tbCircleLineSize.Text);
-        }
-
-        private void tbCircleLineColor_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = colorDialog1.ShowDialog();
-            if (dialogResult == DialogResult.OK)
-            {
-                lineColor = colorDialog1.Color;
-                tbCircleLineColor.Text = lineColor.Name;
-            }
-        
-        }
-
+            circleWidth = int.Parse(tbCircleWidth.Text);            
+        }        
     }
 }
