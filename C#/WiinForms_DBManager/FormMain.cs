@@ -39,8 +39,12 @@ namespace WindowsForms_DBManager
 
             StreamReader streamReader = new StreamReader(filePath);
 
-            string[] columns = streamReader.ReadLine().Split('\t');
-            
+            string column = streamReader.ReadLine();
+            if(column == null)
+            {
+                return;
+            }
+            string[] columns = column.Split('\t');
             for(int i = 0; i < columns.Length; i++)
             {
                 dbGrid.Columns.Add(columns[i], columns[i]);
@@ -50,8 +54,13 @@ namespace WindowsForms_DBManager
             for(int i = 0; streamReader.EndOfStream == false; i++)
             {
                 string row = streamReader.ReadLine();
+                if(row == null)
+                {
+                    break;
+                }
                 string[] cells = row.Split('\t');
-                for(int j = 0; j < cells.Length; j++)
+                dbGrid.Rows.Add();
+                for (int j = 0; j < cells.Length; j++)
                 {
                     dbGrid.Rows[i].Cells[j].Value = cells[j];
                 }
