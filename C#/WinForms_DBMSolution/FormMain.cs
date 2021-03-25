@@ -18,6 +18,7 @@ namespace WindowsForms_DBMSolution
         SqlConnection sqlConnection = new SqlConnection();
         SqlCommand sqlCommand = new SqlCommand();
         string TableName;       // 현재 open된 테이블
+        bool bExecuteByEnterCheckedState = false;
 
         public FormMain()
         {
@@ -94,8 +95,7 @@ namespace WindowsForms_DBMSolution
                     sbPanel1.Text = $"DB open success";
                     sbPanel1.BackColor = Color.LightGreen;
 
-
-                    //sqlConnection.Close();
+                    addItemOfSelectTableBtn();
                 }
                 else
                 {
@@ -106,6 +106,17 @@ namespace WindowsForms_DBMSolution
                 sbPanel1.Text = $"DB open fail";
                 sbPanel1.BackColor = Color.OrangeRed;
             } 
+        }
+
+        private void addItemOfSelectTableBtn()
+        {
+            // GetSchema("tables") : db 내에 있는 테이블들에 대한 정보를 리턴합니다.
+            DataTable dataTable = sqlConnection.GetSchema("tables");
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                string tableNameForBtn = dataTable.Rows[i].ItemArray[2].ToString();
+                sbSelectTableBtn.DropDownItems.Add(tableNameForBtn);
+            }
         }
 
 
@@ -176,16 +187,21 @@ namespace WindowsForms_DBMSolution
                 } else {
                     // ExecuteNonQuery() : 리턴값이 없는 SQL문 실행(UPDATE, INSERT, DELETE, CREATE, ALT 등)
                     sqlCommand.ExecuteNonQuery();
+                    if(getToken(0, ' ', trimedSql).ToUpper() == "CREATE")
+                    {
+                        sbSelectTableBtn.DropDownItems.Clear();
+                        addItemOfSelectTableBtn();
+                    }
                 }
 
-                sbPenel2.Text = "Success";
-                sbPenel2.BackColor = Color.LightGreen;
-            }
-            catch (Exception e)
-            {
+                sbPanel2.Text = "Success";
+                sbPanel2.BackColor = Color.LightGreen;
+                sbSelectTableBtn.Text = TableName;
+
+            } catch (Exception e) {
                 MessageBox.Show(e.Message);
-                sbPenel2.Text = "Error";
-                sbPenel2.BackColor = Color.OrangeRed;
+                sbPanel2.Text = "Error";
+                sbPanel2.BackColor = Color.OrangeRed;
             }
             return 0;
             
@@ -193,6 +209,10 @@ namespace WindowsForms_DBMSolution
 
         private void tbSql_KeyDown(object sender, KeyEventArgs e)
         {
+            if (bExecuteByEnterCheckedState == false)
+            {
+                return;
+            }
             if (e.KeyCode == Keys.Enter)
             {
                 string allSql = tbSql.Text;
@@ -226,13 +246,102 @@ namespace WindowsForms_DBMSolution
                         // UPDATE [Table] SET [field] = [cell velue] WHERE [keyColumnName] = [keyColumnValue]
                         string tableName = TableName;
                         string fieldName = dataGridView1.Columns[j].HeaderText;
-                        string cellVelue = (string)dataGridView1.Rows[i].Cells[j].Value;
+                        object cellVelue = dataGridView1.Rows[i].Cells[j].Value;
+                        //string cellVelue = (string)dataGridView1.Rows[i].Cells[j].Value;
                         string keyColumnName = dataGridView1.Columns[0].HeaderText;
-                        int keyColumnValue = (int)dataGridView1.Rows[i].Cells[0].Value;
+                        object keyColumnValue = dataGridView1.Rows[i].Cells[0].Value;
+                        //int keyColumnValue = (int)dataGridView1.Rows[i].Cells[0].Value;
                         string sql = $"UPDATE {tableName} SET {fieldName} = {cellVelue} WHERE {keyColumnName} = {keyColumnValue}";
                         runSql(sql);
                     }
                 }
+            }
+        }
+
+        private void sbSelectTableBtn_DoubleClick(object sender, EventArgs e)
+        {
+            string sql = $"SELECT * FROM {sbSelectTableBtn.Text}";
+            runSql(sql);
+        }
+
+        private void sbSelectTableBtn_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            string sql = $"SELECT * FROM {e.ClickedItem.Text}";
+            runSql(sql);
+        }
+                
+        private void mnuEditAddRow_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Add();
+        }
+
+        private void mnuEditAddColumn_Click(object sender, EventArgs e)
+        {
+            FormInput formAddColumn = new FormInput("Column Name");
+
+            DialogResult dialogResult = formAddColumn.ShowDialog();
+
+            if (dialogResult == DialogResult.OK)
+            {
+                string addColumnName = formAddColumn.SInput;
+
+                dataGridView1.Columns.Add(addColumnName, addColumnName);
+            }
+        }
+
+       
+        private void mnuExcuteByEnter_CheckStateChanged(object sender, EventArgs e)
+        {
+            bExecuteByEnterCheckedState = mnuExcuteByEnter.Checked;
+        }
+
+        private void mnuFileCloseDB_Click(object sender, EventArgs e)
+        {
+            sqlConnection.Close();
+            sbPanel2.Text = sqlConnection.State.ToString();
+        }
+
+        private void saveTableAsNewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string tableName = "";
+            string sql = $"CREATE TABLE {tableName} (";
+
+            // 새로 만들 테이블의 이름을 입력받습니다.
+            FormInput formInput = new FormInput("Table Name");
+            DialogResult dialogResult = formInput.ShowDialog();
+            if(dialogResult == DialogResult.Cancel) {
+                return;
+            } else if (dialogResult == DialogResult.OK) {
+                tableName = formInput.SInput;
+            }
+
+            //
+            for(int i = 0; i < dataGridView1.Columns.Count; i++)
+            {
+                string column = dataGridView1.Columns[i].HeaderText;
+                sql += $"{column} nchar(10) null";
+                if (i < dataGridView1.Columns.Count - 1)
+                {
+                    sql += ", ";
+                }                                   
+            }
+            sql += ");";
+
+            runSql(sql);    // 테이블 생성을 완료합니다.
+
+            // 데이터 값 입력을 시작합니다.
+            for (int i = 0; i < dataGridView1.Rows.Count; i++) {
+                sql = $"INSERT INTO {tableName} values(";
+                for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                {
+                    sql += $"'{dataGridView1.Rows[i].Cells[j].Value}'";
+                    if(j < dataGridView1.Columns.Count - 1)
+                    {
+                        sql += ", ";
+                    }
+                    sql += ");";
+                }
+                runSql(sql);
             }
         }
     }
