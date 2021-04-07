@@ -48,10 +48,11 @@ namespace Winforms_Chatting_Basic_Server
             {
                 if(listener == null)
                 {
-                    listener = new TcpListener(int.Parse(tbServerPort.Text));                    
+                    listener = new TcpListener(int.Parse(tbServerPort.Text));
+                    // 수신을 대기합니다. Stop()메소드가 호출될 때 까지 지속 대기합니다.
+                    listener.Start();
                 }
-                // 수신을 대기합니다. Stop()메소드가 호출될 때 까지 지속 대기합니다.
-                listener.Start();
+               
 
                 // 논블로킹(nonbloking) : 해당하는 요청이 들어오지 않은 상태에서도 다른 작업을 수행하도록 합니다.
                 // pending : listener에 대기중인 요청이 있는지 확인합니다.
@@ -67,13 +68,14 @@ namespace Winforms_Chatting_Basic_Server
                     NetworkStream networkStream = tcpClient.GetStream();
                     while (networkStream.DataAvailable)
                     {
-                        networkStream.Read(bArr, 0, 1024);
-                        string str = Encoding.Default.GetString(bArr);
-                        MainMsg += str.TrimEnd('\0');
+                        // NetworkStream.Read() 메소드는 읽은 배열(null 제외)의 개수를 리턴합니다.
+                        int n = networkStream.Read(bArr, 0, 1024);
+                        MainMsg += Encoding.Default.GetString(bArr, 0, n);
+                        //MainMsg += str.TrimEnd('\0');
                     }
                 }
-                    
-                listener.Stop();
+                Thread.Sleep(100);    
+                //listener.Stop();
             }
         }        
 

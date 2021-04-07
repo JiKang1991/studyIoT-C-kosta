@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,10 +14,55 @@ namespace WinForms_Chatting_Basic
 {
     public partial class FormChattingBasicClient : Form
     {
+        [DllImport("kernel32")]
+        static extern int GetPrivateProfileString(string sec, string key, string defStr, StringBuilder sb, int nsb, string path);
+        
+        [DllImport("kernel32")]
+        static extern int WritePrivateProfileString(string sec, string key, string str, string path);
+        
         public FormChattingBasicClient()
         {
-            InitializeComponent();
+            InitializeComponent();                        
         }
+
+        string initIP = "127.0.0.1";
+        int initPort = 9001;
+        int openPointX = 200;
+        int openPointY = 200;
+        int sizeWidth = 600;
+        int sizeHeight = 600;
+        
+
+        private void FormChattingBasicClient_Load(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder(512);
+
+            // 파일, 섹션, 키가 없을 경우에는 sb에 기본값이 저장됩니다.
+            GetPrivateProfileString("Comm", "IP", "127.0.0.1", sb, 512, @".\ComClient.ini");  // Section [Comm], Key[IP, Port] , FileName[ComClient.ini]
+            initIP = sb.ToString();
+            
+            GetPrivateProfileString("Comm", "Port", "9001", sb, 512, @".\ComClient.ini");
+            initPort = int.Parse(sb.ToString());
+
+            GetPrivateProfileString("Form", "OpenPointX", "300", sb, 512, @".\ComClient.ini");
+            openPointX = int.Parse(sb.ToString());
+
+            GetPrivateProfileString("Form", "OpenPointY", "300", sb, 512, @".\ComClient.ini");
+            openPointY = int.Parse(sb.ToString());
+
+            GetPrivateProfileString("Form", "SizeWidth", "800", sb, 512, @".\ComClient.ini");
+            sizeWidth = int.Parse(sb.ToString());
+            
+            GetPrivateProfileString("Form", "SizeHeigh", "800", sb, 512, @".\ComClient.ini");
+            sizeHeight = int.Parse(sb.ToString());
+
+            tbIP.Text = initIP;
+            tbPort.Text = $"{initPort}";
+            Location = new Point(openPointX, openPointY);
+            Size = new Size(sizeWidth, sizeHeight);
+        }
+
+
 
         // packet = 한 번에 전송하는 메시지 단위 
         // 1 packet을 전송하는 메소드 입니다.
@@ -35,5 +81,19 @@ namespace WinForms_Chatting_Basic
             sbClient.Text = "succeed";
             socket.Close();
         }
+
+        private void FormChattingBasicClient_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            WritePrivateProfileString("Comm", "IP", tbIP.Text, @".\ComClient.ini");
+            WritePrivateProfileString("Comm", "Port", tbPort.Text, @".\ComClient.ini");
+            WritePrivateProfileString("Form", "OpenPointX", $"{Location.X}" , @".\ComClient.ini");
+            WritePrivateProfileString("Form", "OpenPointY", $"{Location.Y}" , @".\ComClient.ini");
+            WritePrivateProfileString("Form", "SizeWidth", $"{Size.Width}" , @".\ComClient.ini");
+            WritePrivateProfileString("Form", "SizeHeigh", $"{Size.Height}" , @".\ComClient.ini");
+
+            //Point openPoint = formChattingBasicClient.Location;
+            
+
+        }        
     }
 }
