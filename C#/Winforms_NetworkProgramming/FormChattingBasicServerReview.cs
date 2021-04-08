@@ -1,4 +1,5 @@
-﻿using System;
+﻿using myLibrary;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +20,65 @@ namespace WinForms_Chatting_Basic_Server_Reveiw
         private TcpListener listener = null;
         private Thread thread = null;
         private string listenMessage = "";
+        IniFile ini;
+        Socket sendSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        //MyLib myLib = new MyLib();
+        /*
+        [DllImport("kernel32")]
+        static extern int GetPrivateProfileString(string sec, string key, string defStr, StringBuilder sb, int nsb, string path);
 
+        [DllImport("kernel32")]
+        static extern int WritePrivateProfileString(string sec, string key, string str, string path);
+        */
         public FormChattingBasicServerReview()
         {
             InitializeComponent();
+        }
+              
+
+        private void FormChattingBasicServerReview_Load(object sender, EventArgs e)
+        {
+            //ini = new IniFile(@".\ComServer.ini");
+            ini = new IniFile("");
+            ini.ChangeIniPath(@".\ComServer.ini");
+
+            int initServerPort = 9001;
+            int openPointX = 200;
+            int openPointY = 200;
+            int sizeWidth = 600;
+            int sizeHeight = 600;
+
+            initServerPort = int.Parse(ini.GetString("Comm", "ServerPort", "9001"));
+            openPointX = int.Parse(ini.GetString("Form", "OpenPointX", "0"));
+            openPointY = int.Parse(ini.GetString("Form", "OpenPointY", "300"));
+            sizeWidth = int.Parse(ini.GetString("Form", "SizeWidth", "800"));
+            sizeHeight = int.Parse(ini.GetString("Form", "SizeHeigh", "800"));
+            //splitContainer1.SplitterDistance = int.Parse(ini.GetString("Form", "SizeSplitter", "500"));
+
+
+           /*
+               StringBuilder sb = new StringBuilder(512);
+
+               // 파일, 섹션, 키가 없을 경우에는 sb에 기본값이 저장됩니다.
+               GetPrivateProfileString("Comm", "ServerPort", "9001", sb, 512, @".\ComServer.ini");
+               initServerPort = int.Parse(sb.ToString());
+
+               GetPrivateProfileString("Form", "OpenPointX", "300", sb, 512, @".\ComServer.ini");
+               openPointX = int.Parse(sb.ToString());
+
+               GetPrivateProfileString("Form", "OpenPointY", "300", sb, 512, @".\ComServer.ini");
+               openPointY = int.Parse(sb.ToString());
+
+               GetPrivateProfileString("Form", "SizeWidth", "800", sb, 512, @".\ComServer.ini");
+               sizeWidth = int.Parse(sb.ToString());
+
+               GetPrivateProfileString("Form", "SizeHeigh", "800", sb, 512, @".\ComServer.ini");
+               sizeHeight = int.Parse(sb.ToString());
+           */
+
+           tbServerPort.Text = $"{initServerPort}";
+            Location = new Point(openPointX, openPointY);
+            Size = new Size(sizeWidth, sizeHeight);
         }
 
         // delegate
@@ -43,6 +100,8 @@ namespace WinForms_Chatting_Basic_Server_Reveiw
                 tbServer.Text += str;
             }
         }
+
+
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -106,16 +165,22 @@ namespace WinForms_Chatting_Basic_Server_Reveiw
 
                     // TcpClient가 아닌 Socket을 이용해서 Accept 및 입력 stream 처리
                     Socket socket = listener.AcceptSocket();
-
-                    IPEndPoint ipEndPoint = (IPEndPoint)socket.RemoteEndPoint;
-                    sbServerLabel2.Text = $"{ipEndPoint.Address} : {ipEndPoint.Port}";
-
                     // Socket.Available을 사용하여 byte 배열의 크기를 동적으로 하여 생성합니다.
                     byte[] bArr = new byte[socket.Available];
                     // byte 배열의 크기를 동적으로 할당하므로 while문을 사용하지 않습니다.
                     int sizeOfReceive = socket.Receive(bArr);
                     string str = Encoding.Default.GetString(bArr, 0, sizeOfReceive);
                     addText(str);
+
+                    IPEndPoint ipEndPoint = (IPEndPoint)socket.RemoteEndPoint;
+                    //sbServerLabel2.Text = $"{ipEndPoint.Address} : {ipEndPoint.Port}";
+                    sbServerLabel2.Text = $"{MyLib.GetTorken(0, socket.RemoteEndPoint.ToString(), ':')}";
+
+                    sendSocket.Connect(tbClientIP.Text, int.Parse(tbClientPort.Text));
+
+                    sendSocket.Send(Encoding.Default.GetBytes(str));
+
+                    sendSocket.Close();
                 }
             }
         }
@@ -148,7 +213,22 @@ namespace WinForms_Chatting_Basic_Server_Reveiw
 
         private void FormChattingBasicServerReview_FormClosing(object sender, FormClosingEventArgs e)
         {
-            
+            ini.WriteString("Comm", "ServerPort", tbServerPort.Text);
+            ini.WriteString("Form", "OpenPointX", $"{Location.X}");
+            ini.WriteString("Form", "OpenPointY", $"{Location.Y}");
+            ini.WriteString("Form", "SizeWidth", $"{Size.Width}");
+            ini.WriteString("Form", "SizeHeigh", $"{Size.Height}");
+            //ini.WriteString("Form", "SizeSplitter", $"{splitContainer1.SplitterDistance}");
+
+            /*
+            WritePrivateProfileString("Comm", "ServerPort", tbServerPort.Text, @".\ComServer.ini");
+            WritePrivateProfileString("Form", "OpenPointX", $"{Location.X}", @".\ComServer.ini");
+            WritePrivateProfileString("Form", "OpenPointY", $"{Location.Y}", @".\ComServer.ini");
+            WritePrivateProfileString("Form", "SizeWidth", $"{Size.Width}", @".\ComServer.ini");
+            WritePrivateProfileString("Form", "SizeHeigh", $"{Size.Height}", @".\ComServer.ini");
+            */
+
+
             // 스레드가 null이 아닌 경우 abort를 요청합니다.
             if (thread != null)
             {
@@ -157,6 +237,11 @@ namespace WinForms_Chatting_Basic_Server_Reveiw
                 ThreadState threadState = thread.ThreadState;
                 sbServerMessage.Text = $"thread state - {threadState.ToString()}";
             }
+        }
+
+        private void tbServerPort_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
