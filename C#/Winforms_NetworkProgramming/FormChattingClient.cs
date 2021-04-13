@@ -19,6 +19,7 @@ namespace WinForms_Chatting_Client
 
         Socket socket = null;
         Thread receiveThread = null;
+        Thread connectThread = null;
         IniFile iniFile = new IniFile(@".\FormChattingClient.ini");
 
         public FormChattingClient()
@@ -40,7 +41,7 @@ namespace WinForms_Chatting_Client
             {
                 // .AppendText(string) 메소드는 string 객체를 새로 생성하지 않고,
                 // 기존의 string 객체 뒤에 매개변수 문자열을 더합니다.
-                tbReceive.AppendText(str);
+                tbReceive.AppendText(str + "\r\n");
             }
         }
 
@@ -73,9 +74,24 @@ namespace WinForms_Chatting_Client
                 {
                     socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 }
-
+                else
+                {
+                    if (receiveThread != null) { 
+                        receiveThread.Abort();
+                        receiveThread = null;
+                    }
+                    socket.Close();
+                    socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                }
                 // 커넥션을 구성합니다. (연결을 시도합니다.) 
-                socket.Connect(tbIP.Text, int.Parse(tbPort.Text));
+                socket.Connect(tbIP.Text, int.Parse(tbPort.Text));      // Blocking mode : TimeOut 발생 전까지(2 ~ 4초)
+                // connectThread = new Thread(ConnectProcess);
+                // connectThread.Start();
+
+                //while (true)
+                //{
+                //    if (connectThread.IsAlive) break;
+                //}
 
                 // EndPoint : 접속을 시도한 대상의 마지막 부분(끝 점)을 의미합니다.
                 // Socket.LocalEndPoint : 연결을 시도하는 측(클라이언트 측)의 끝 점
@@ -85,17 +101,22 @@ namespace WinForms_Chatting_Client
                 sbPort.Text = ((IPEndPoint)socket.RemoteEndPoint).Port.ToString();
 
                 // ReceiveProcess()를 수행하는 스레드를 생성하고 실행합니다.
-                if (receiveThread == null)
-                {
+//                if (receiveThread == null)
+//                {
                     receiveThread = new Thread(ReceiveProcess);
                     receiveThread.Start();
-                }
+//                }
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message);
+                AddText(exception.Message);
             }
         }
+
+        /*private void ConnectProcess()
+        {
+            socket.Connect(tbIP.Text, int.Parse(tbPort.Text));
+        }*/
 
         // Thread로 동작시키는 메소드입니다.
         private void ReceiveProcess()
@@ -120,16 +141,27 @@ namespace WinForms_Chatting_Client
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            if (socket.Connected == true)
+            try
             {
-                //string str = tbSend.Text.Split('\r').Last();
-                string str = tbSend.Text.Trim();
-                // 텍스트박스의 각 라인 끝에는 \n\r(CRLF)이 있습니다.
-                string[] sArr = str.Split('\r');
-                // sArr의 마지막 요소를 sLast에 대입합니다.
-                string sLast = sArr[sArr.Length - 1];
-
-                socket.Send(Encoding.Default.GetBytes(sLast));
+                if (socket.Connected == true)
+                {
+                    //string str = tbSend.Text.Split('\r').Last();
+                    string str = tbSend.Text.Trim();
+                    // 텍스트박스의 각 라인 끝에는 \n\r(CRLF)이 있습니다.
+                    string[] sArr = str.Split('\r');
+                    // sArr의 마지막 요소를 sLast에 대입합니다.
+                    string sLast = sArr[sArr.Length - 1];
+                
+                    socket.Send(Encoding.Default.GetBytes(sLast));
+                }
+                else
+                {
+                    AddText("서버와의 연결이 원활하지 않습니다.\r\n");
+                }
+            }
+            catch(Exception exception)
+            {
+                AddText(exception.Message);
             }
         }
 
@@ -140,7 +172,12 @@ namespace WinForms_Chatting_Client
             iniFile.WriteString("Form", "OpenPointX", $"{Location.X}");
             iniFile.WriteString("Form", "OpenPointY", $"{Location.Y}");
             iniFile.WriteString("Form", "SizeWidth", $"{Size.Width}");
-            iniFile.WriteString("Form", "SizeHeigh", $"{Size.Height}");            
+            iniFile.WriteString("Form", "SizeHeigh", $"{Size.Height}");
+
+            if (receiveThread != null)
+            {
+                receiveThread.Abort();
+            }
         }
     }
 }
