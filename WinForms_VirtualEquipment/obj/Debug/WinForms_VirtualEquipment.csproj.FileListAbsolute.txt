@@ -1,0 +1,13 @@
+C:\Coding\WinForms_VirtualEquipment\bin\Debug\WinForms_VirtualEquipment.exe.config
+C:\Coding\WinForms_VirtualEquipment\bin\Debug\WinForms_VirtualEquipment.exe
+C:\Coding\WinForms_VirtualEquipment\bin\Debug\WinForms_VirtualEquipment.pdb
+C:\Coding\WinForms_VirtualEquipment\bin\Debug\myLibrary.dll
+C:\Coding\WinForms_VirtualEquipment\bin\Debug\myLibrary.pdb
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.csprojAssemblyReference.cache
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.FormMain.resources
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.Properties.Resources.resources
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.csproj.GenerateResource.cache
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.csproj.CoreCompileInputs.cache
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.csproj.CopyComplete
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.exe
+C:\Coding\WinForms_VirtualEquipment\obj\Debug\WinForms_VirtualEquipment.pdb
