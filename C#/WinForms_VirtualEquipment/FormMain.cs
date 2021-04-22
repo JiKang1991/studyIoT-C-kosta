@@ -160,7 +160,7 @@ namespace WinForms_VirtualEquipment
             TbEqModel.Text = iniFile.GetString("Equipment", "Model", "000000");                 //6
             TbEqNumber.Text = iniFile.GetString("Equipment", "Number", "00001");                //5
             TbEqBatteryV.Text = iniFile.GetString("Equipment", "BatteryV", "00001");            //5
-            TbEqOperate.Text = iniFile.GetString("Equipment", "Operate", "00001");              //5
+            TbEqOperate.Text = iniFile.GetString("Equipment", "Operate", "1");                  //1
             TbEqOperateCount.Text = iniFile.GetString("Equipment", "OperateTime", "00001");     //5
 
             TbTemperature.Text = iniFile.GetString("Environment", "Temperature", "00001");      //4
@@ -168,7 +168,7 @@ namespace WinForms_VirtualEquipment
             TbWindSpeed.Text = iniFile.GetString("Environment", "WindSpeed", "00001");          //4
             TbOzone.Text = iniFile.GetString("Environment", "Ozone", "00001");                  //4
             TbFineDust.Text = iniFile.GetString("Environment", "FineDust", "00001");            //3
-            TbUltraFineDust.Text = iniFile.GetString("Environment", "UltraFineDust", "00001");  //3     total : 53byte
+            TbUltraFineDust.Text = iniFile.GetString("Environment", "UltraFineDust", "00001");  //3     total : 49byte
 
             DtStart.Value = new DateTime(long.Parse(iniFile.GetString("Operation", "StartDate", "0")));
             DtStartTime.Value = new DateTime(long.Parse(iniFile.GetString("Operation", "StartTime", "0")));
@@ -193,6 +193,7 @@ namespace WinForms_VirtualEquipment
         {
             Socket socket = null;
             Thread receiptThread = null;
+            System.Threading.Timer timer1 = null;
 
             // 소켓이 생성되어있는 상황에서 다시 'Start'버튼을 누르면 if구문 블록의 작업이 수행됩니다.
             if (socket != null)
@@ -213,7 +214,11 @@ namespace WinForms_VirtualEquipment
 
             try
             {
-                System.Threading.Timer timer1 = new System.Threading.Timer(TimerTick, socket, 1000, int.Parse(TbTimeInterval.Text) * 1000);
+                
+                if (timer1 == null)
+                {
+                    timer1 = new System.Threading.Timer(TimerTick, socket, 1000, int.Parse(TbTimeInterval.Text) * 1000);
+                }
                 //timer1.Interval = int.Parse(TbTimeInterval.Text) * 1000;
                 //timer1.Enabled = true;
                 //timer1.Tick += new EventHandler(timer1_Tick(sender, e, socket));
