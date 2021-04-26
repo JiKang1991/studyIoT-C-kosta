@@ -1,0 +1,15 @@
+C:\Coding\WinForms_EquipManager\bin\Debug\WinForms_EquipManager.exe.config
+C:\Coding\WinForms_EquipManager\bin\Debug\WinForms_EquipManager.exe
+C:\Coding\WinForms_EquipManager\bin\Debug\WinForms_EquipManager.pdb
+C:\Coding\WinForms_EquipManager\bin\Debug\myLibrary.dll
+C:\Coding\WinForms_EquipManager\bin\Debug\myLibrary.pdb
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.csprojAssemblyReference.cache
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.FormMain.resources
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.Properties.Resources.resources
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.csproj.GenerateResource.cache
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.csproj.CoreCompileInputs.cache
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.csproj.CopyComplete
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.exe
+C:\Coding\WinForms_EquipManager\obj\Debug\WinForms_EquipManager.pdb
+C:\Coding\WinForms_EquipManager\bin\Debug\Microsoft.Data.Tools.Components.dll
+C:\Coding\WinForms_EquipManager\bin\Debug\ko\Microsoft.Data.Tools.Components.resources.dll
