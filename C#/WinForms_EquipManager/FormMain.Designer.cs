@@ -82,7 +82,10 @@ namespace WinForms_EquipManager
             this.TBServerPort = new System.Windows.Forms.TextBox();
             this.TBMoniter = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.SLabelUdpMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.TbUDPPort = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -98,6 +101,7 @@ namespace WinForms_EquipManager
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -106,7 +110,7 @@ namespace WinForms_EquipManager
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(977, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(908, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -155,7 +159,7 @@ namespace WinForms_EquipManager
             this.tabControl1.Location = new System.Drawing.Point(0, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(978, 728);
+            this.tabControl1.Size = new System.Drawing.Size(909, 581);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -164,7 +168,7 @@ namespace WinForms_EquipManager
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(970, 702);
+            this.tabPage1.Size = new System.Drawing.Size(901, 555);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Concole";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -185,8 +189,8 @@ namespace WinForms_EquipManager
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer2.Size = new System.Drawing.Size(964, 696);
-            this.splitContainer2.SplitterDistance = 301;
+            this.splitContainer2.Size = new System.Drawing.Size(895, 549);
+            this.splitContainer2.SplitterDistance = 237;
             this.splitContainer2.TabIndex = 0;
             // 
             // groupBox2
@@ -505,7 +509,7 @@ namespace WinForms_EquipManager
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(964, 391);
+            this.dataGridView1.Size = new System.Drawing.Size(895, 308);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.RowHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_RowHeaderMouseDoubleClick);
             // 
@@ -516,7 +520,7 @@ namespace WinForms_EquipManager
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(970, 702);
+            this.tabPage2.Size = new System.Drawing.Size(901, 555);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Environment";
             // 
@@ -530,15 +534,17 @@ namespace WinForms_EquipManager
             // 
             this.splitContainer1.Panel1.Controls.Add(this.label3);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
+            this.splitContainer1.Panel1.Controls.Add(this.label4);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.TbUDPPort);
             this.splitContainer1.Panel1.Controls.Add(this.TbInterval);
             this.splitContainer1.Panel1.Controls.Add(this.TBServerPort);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.TBMoniter);
-            this.splitContainer1.Size = new System.Drawing.Size(964, 696);
-            this.splitContainer1.SplitterDistance = 329;
+            this.splitContainer1.Size = new System.Drawing.Size(895, 549);
+            this.splitContainer1.SplitterDistance = 305;
             this.splitContainer1.TabIndex = 0;
             // 
             // label3
@@ -592,27 +598,53 @@ namespace WinForms_EquipManager
             this.TBMoniter.Location = new System.Drawing.Point(0, 0);
             this.TBMoniter.Multiline = true;
             this.TBMoniter.Name = "TBMoniter";
-            this.TBMoniter.Size = new System.Drawing.Size(631, 696);
+            this.TBMoniter.Size = new System.Drawing.Size(586, 549);
             this.TBMoniter.TabIndex = 0;
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 754);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SLabelUdpMessage});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 607);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(977, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(908, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // SLabelUdpMessage
+            // 
+            this.SLabelUdpMessage.Name = "SLabelUdpMessage";
+            this.SLabelUdpMessage.Size = new System.Drawing.Size(78, 17);
+            this.SLabelUdpMessage.Text = "udp message";
             // 
             // timer1
             // 
             this.timer1.Interval = 5000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // TbUDPPort
+            // 
+            this.TbUDPPort.Location = new System.Drawing.Point(113, 91);
+            this.TbUDPPort.Name = "TbUDPPort";
+            this.TbUDPPort.Size = new System.Drawing.Size(47, 21);
+            this.TbUDPPort.TabIndex = 0;
+            this.TbUDPPort.Text = "9002";
+            this.TbUDPPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 94);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(95, 12);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Server UDP Port";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(977, 776);
+            this.ClientSize = new System.Drawing.Size(908, 629);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
@@ -641,6 +673,8 @@ namespace WinForms_EquipManager
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -701,6 +735,9 @@ namespace WinForms_EquipManager
         private System.Windows.Forms.CheckBox CbDescription;
         private System.Windows.Forms.CheckBox CbModel;
         private System.Windows.Forms.CheckBox CbCode;
+        private System.Windows.Forms.ToolStripStatusLabel SLabelUdpMessage;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox TbUDPPort;
     }
 }
 

@@ -1,0 +1,13 @@
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\bin\Debug\WinForms_UDP_Chatting.exe.config
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\bin\Debug\WinForms_UDP_Chatting.exe
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\bin\Debug\WinForms_UDP_Chatting.pdb
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\bin\Debug\myLibrary.dll
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\bin\Debug\myLibrary.pdb
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.csprojAssemblyReference.cache
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.FormMain.resources
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.Properties.Resources.resources
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.csproj.GenerateResource.cache
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.csproj.CoreCompileInputs.cache
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.csproj.CopyComplete
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.exe
+C:\Users\jikang\source\repos\WinForms_UDP_Chatting\obj\Debug\WinForms_UDP_Chatting.pdb

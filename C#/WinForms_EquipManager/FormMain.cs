@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -20,11 +21,13 @@ namespace WinForms_EquipManager
         List<Socket> socketList = new List<Socket>();
         Thread serverThread = null;
         Thread readThread = null;
+        Thread udpReceiptThread = null;
         IniFile iniFile = new IniFile(".\\EquipManager.ini");
         string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Coding\WinForms_EquipManager\EquipManagerDB.mdf;Integrated Security=True;Connect Timeout=30";
         string sTable = "fStatus";
         DBConnecter dBConnecterM;
         DBConnecter dBConnecterR;
+        Socket udpServerSocket = null;
         /* SqlConnection sqlConnectionR = new SqlConnection();
         SqlCommand sqlCommandR = new SqlCommand();
         SqlConnection sqlConnectionM = new SqlConnection();
@@ -37,6 +40,7 @@ namespace WinForms_EquipManager
         }
 
         private delegate void PrintLogCB(string str);
+        private delegate void PrintToSLabelCB(string str);
         
         private void PrintLog(string str)
         {
@@ -49,7 +53,19 @@ namespace WinForms_EquipManager
                 TBMoniter.AppendText(str);
             }
         }
-        
+        private void PrintToSLabel(string str)
+        {
+            if (statusStrip1.InvokeRequired)
+            {
+                Invoke(new PrintToSLabelCB(PrintToSLabel), str);
+            }
+            else
+            {
+                SLabelUdpMessage.Text = str;
+            }
+        }
+
+
 
         private void ServerProcess()
         {
@@ -181,7 +197,23 @@ namespace WinForms_EquipManager
                 Thread.Sleep(100);
             }
         }
-                
+
+        private void UdpReceiptProcess()
+        {
+            while (true)
+            {
+                if(udpServerSocket.Available > 0)
+                {
+                    byte[] bArr = new byte[udpServerSocket.Available];
+                    udpServerSocket.Receive(bArr);
+                    // statusbar의 요소에는 delegate와 invoke 절차 없이 접근이 가능합니다.
+                    SLabelUdpMessage.Text = Encoding.Default.GetString(bArr);
+                    //PrintToSLabel(Encoding.Default.GetString(bArr));
+                }
+            }
+        }
+
+
 
 
         private void MnuServerStart_Click(object sender, EventArgs e)
@@ -208,7 +240,25 @@ namespace WinForms_EquipManager
                 readThread.Abort();  // 완전 종결(메모리에서 삭제합니다.)
             }
             readThread = new Thread(ReadProcess);
-            readThread.Start();       
+            readThread.Start(); 
+
+            // udp 통신 관련 소켓 설정
+            
+            if(udpServerSocket == null)
+            {
+                udpServerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, int.Parse(TbUDPPort.Text));
+                udpServerSocket.Bind(ipEndPoint);
+            }
+
+            // udp 통신 관련 스레드 설정
+
+            if (udpReceiptThread == null)
+            {
+                udpReceiptThread = new Thread(UdpReceiptProcess);
+                udpReceiptThread.Start();
+            }
+            
 
         }
 
@@ -253,7 +303,11 @@ namespace WinForms_EquipManager
             if (readThread != null)
             {
                 readThread.Abort();
-            }            
+            }
+            if (udpReceiptThread != null)
+            {
+                udpReceiptThread.Abort();
+            }
 
             iniFile.WriteString("Database", "ConnectionString", connectionString);
             iniFile.WriteString("Server", "Port", $"{TBServerPort.Text}");
@@ -355,6 +409,5 @@ namespace WinForms_EquipManager
         {
             CbLocation2.Checked = true;
         }
-
     }
 }
