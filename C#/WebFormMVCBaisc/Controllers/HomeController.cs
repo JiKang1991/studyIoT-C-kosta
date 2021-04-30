@@ -11,7 +11,7 @@ namespace MVCWebTest.Controllers
 {
     public class HomeController : Controller
     {
-        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Coding\MVCWeb\WebDB.mdf;Integrated Security=True;Connect Timeout=30";
+        string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Coding\studyC-kostaIOT-git\C#\WebFormMVCBaisc\WebDB.mdf;Integrated Security=True;Connect Timeout=30";
 
         public ActionResult Index()
         {
