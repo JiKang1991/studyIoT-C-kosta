@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="jumbotron">
+    <form asp-controller="Home" asp-action="Login">
+        <table align="left">
+            <tr>
+                <td style="width:80px">User Id</td>
+                <td><input type="text" id="userId" name="userId"/></td>
+            </tr>
+            <tr>
+                <td style="width:80px">Password</td>
+                <td><input type="password" id="userPw" name="userPw"/></td>
+            </tr>
+        </table>
+        <input type="submit" id="btnLogin" value="Login" style="height:52px; margin-left:5px;"/>
+    </form>
+</div>
