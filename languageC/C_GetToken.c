@@ -1,12 +1,39 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include "methodGroup.h"
+
+
 
 // c#에서 GetToken 메소드
 // string GetToken(int index, string str, char chr){
 // 		string[] sArr = str.Split(chr);
 //		return sArr[index];
 // }
+
+
+int main(){
+
+	//char *s1 = "abcdefghijkl";
+	//while(1){
+		//printf("Input char which you want to find : ");
+		//int chr = getchar();
+		//printf("[%c] 문자는 [%d] 번째에 있습니다.\r\n", chr, ChrFind(s1, chr) + 1);
+	//}
+	//char buf[1024];
+	char *tt = "1,2,3,4,5,6,789";
+	//char **ss = split(tt, ',');
+	int input;
+	while(1){
+		printf("input number : " );
+		scanf("%d", &input);
+		printf("%d", input);
+		// strcpy(buf, getToken(input, tt, ','));
+		// printf("%d 번째 아이템은 %s 입니다.\n", input, buf);		
+		printf("%d 번째 아이템은 %s 입니다.\n", input, getToken(input, tt, ','));
+	}
+	return 0;
+}
 
 
 // 참고 함수 - 주어진 문자열에서 특정한 문자를 찾는 함수입니다.
@@ -63,9 +90,36 @@ char** split(char* source, char divider){
 		*copySource++;
 	}
 	return splitedSource;
-	// source = "123" "456" "789"	
+	// splitedSource = "123" "456" "789"	
 }
 
+char* getToken(int index, char* source, char delimeter){
+	
+	
+	char buffer[1024];
+	int startIndex = 0;
+	int delimeterIndex;	
+	int j;
+	
+	for(int i = 0; i < index; i++){	
+		delimeterIndex += chrFind(source+startIndex, delimeter);
+		if(delimeterIndex == -1) return NULL;
+		startIndex += delimeterIndex + 1;
+	}
+	printf("%d", delimeterIndex);
+	/*
+	j = chrFind(source+startIndex, delimeter);
+	if(j == -1) j = strlen(source);
+	else j += startIndex;
+	
+	// strncpy - 버그 존재(0이 들어가지 않습니다.)
+	strncpy(buffer, source+startIndex, j-startIndex);
+	buffer[j- startIndex] = 0;
+	*/
+	return buffer;
+}
+
+/*
 char* getToken(int index, char* source, char divider){
 		char** ss = split(source, divider);
 		return *(ss + index);
@@ -112,23 +166,5 @@ char GetToken(int index, char* source, char divider){
 	
 }
 */
-int main(){
 
-	//char *s1 = "abcdefghijkl";
-	//while(1){
-		//printf("Input char which you want to find : ");
-		//int chr = getchar();
-		//printf("[%c] 문자는 [%d] 번째에 있습니다.\r\n", chr, ChrFind(s1, chr) + 1);
-	//}
-	
-	char *tt = "1,2,3,4,5,6";
-	//char **ss = split(tt, ',');
-	int input;
-	while(1){
-		printf("input number : " );
-		scanf("%d", &input);
-		printf("%d 번째 아이템은 %s 입니다.\n", input, getToken(input, tt, ','));
-	}
-	return 0;
-}
 
